@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Event Button Game</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #222;
+    color: white;
+    font-family: sans-serif;
+    transition: background 0.5s;
+  }
+  #instructions {
+    margin-bottom: 30px;
+    font-size: 20px;
+    text-align: center;
+  }
+  #gameButton {
+    padding: 40px 80px;
+    font-size: 32px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background 0.5s, color 0.5s;
+  }
+</style>
+</head>
+<body>
+
+<div id="instructions">
+  Click the button to trigger random events!<br>
+  Some events change colors, and 1 in 100 clicks will win the ultimate prize!
+</div>
+
+<button id="gameButton">Click Me!</button>
+
+<script>
+const button = document.getElementById('gameButton');
+let rainbowActive = false;
+let hue = 0;
+
+function animateRainbow() {
+  if (!rainbowActive) return;
+  document.body.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
+  hue = (hue + 1) % 360;
+  requestAnimationFrame(animateRainbow);
+}
+
+function randomEvent() {
+  const rand = Math.floor(Math.random() * 100); // 1 in 100 chance to win
+  if (rand === 0) {
+    document.body.style.background = '#ffd700';
+    button.textContent = 'YOU WIN!';
+    button.disabled = true;
+    rainbowActive = false;
+    return;
+  }
+
+  const events = ['rainbow', 'buttonColor', 'nothing'];
+  const choice = events[Math.floor(Math.random() * events.length)];
+
+  switch(choice) {
+    case 'rainbow':
+      rainbowActive = true;
+      animateRainbow();
+      button.textContent = 'Rainbow Mode!';
+      break;
+    case 'buttonColor':
+      button.style.backgroundColor = `hsl(${Math.random()*360}, 80%, 60%)`;
+      button.textContent = 'Color Changed!';
+      break;
+    case 'nothing':
+      button.textContent = 'Nothing happened...';
+      break;
+  }
+}
+
+button.addEventListener('click', randomEvent);
+</script>
+
+</body>
+</html>
